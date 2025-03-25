@@ -1,6 +1,6 @@
 import express from "express";
 import passport from "passport";
-
+import {ensureAuthenticated} from "../middleware/middleware.js";
 const router = express.Router();
 
 
@@ -22,13 +22,35 @@ router.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
-
+router.get('/status',(req,res)=>{
+  if(req.isAuthenticated()){
+    res.json({authenticated : true , user : req.user});
+  }else{
+    res.status(401).json({authenticated:false } );
+  }
+})
 
 router.get("/logout", (req, res) => {
-  //log out
-  req.session = null; // Clears the session using cookie-session
-  res.send("Logged out successfully!");
+  req.logout(()=>{
+      req.session.destroy() ;
+      res.clearCookie('connect.sid') ;
+      res.send('logout successfull');
+  })
 });
+
+// Middleware to check if the user is authenticated
+const isAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next(); // Proceed to the requested route
+  }
+  res.status(401).json({ message: 'Unauthorized, please log in.' }); // Or redirect to login page
+};
+
+// Apply middleware to protect the appointment route
+router.get('/appointment', ensureAuthenticated, (req, res) => {
+  res.json({ message: `Welcome to your appointment, ${req.user.email}` });
+});
+
 router.get(
   "/google",
   passport.authenticate("google", {
