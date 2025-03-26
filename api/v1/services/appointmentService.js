@@ -2,13 +2,42 @@ import express from "express";
 import pool from "../../db/config.js";
 export const submitAppointment = async (data) => {
   try {
-    const { user_email, doctor_id, appointment_time, location, type ,appointment_date } = data;
+    const {
+      user_email,
+      doctor_id,
+      appointment_time,
+      location,
+      type,
+      appointment_date,
+    } = data;
     const status = "Pending"; // Default status for approval
+    // Check if the user already has an appointment at the same time
+    const existingAppointment = await pool.query(
+      `SELECT * FROM appointments 
+           WHERE user_email = $1 
+           AND appointment_time = $2 
+           AND appointment_date = $3`,
+      [user_email, appointment_time, appointment_date]
+    );
 
+    if (existingAppointment.rows.length > 0) {
+      return {
+        success: false,
+        message: "You already have an appointment booked at this time.",
+      };
+    }
     const check = await pool.query(
       `INSERT INTO appointments (user_email, doctor_id, appointment_time, location, type, status , appointment_date) 
          VALUES ($1, $2, $3, $4, $5, $6 , $7)`,
-      [user_email, doctor_id, appointment_time, location, type, status , appointment_date]
+      [
+        user_email,
+        doctor_id,
+        appointment_time,
+        location,
+        type,
+        status,
+        appointment_date,
+      ]
     );
 
     console.log("Appointment booked");
@@ -51,32 +80,32 @@ export const approveAppointment = async (id) => {
   }
 };
 export const declineAppointment = async (id) => {
-  try{
+  try {
     const result = await pool.query(
       `UPDATE appointments SET status = $1 
        WHERE id = $2`,
-      ["Pending",id]
+      ["Pending", id]
     );
-    if(result.rowCount === 0){
-      return{
-        success : false ,
+    if (result.rowCount === 0) {
+      return {
+        success: false,
         message: "Appointment not found or already approved.",
-      }
+      };
     }
-    console.log('Appointment Declined') ;
-    return{
-      success : true ,
-      message : 'Appointment declined successfully'
-    }
-  }catch(err){
-    console.log('Error in Controller api');
-    return{
-      success : false,
-      message : 'Error in Controller api'
-    }
+    console.log("Appointment Declined");
+    return {
+      success: true,
+      message: "Appointment declined successfully",
+    };
+  } catch (err) {
+    console.log("Error in Controller api");
+    return {
+      success: false,
+      message: "Error in Controller api",
+    };
   }
-}
-export const updateSameTimeAppointments = async (date,time,doctor_id) => {
+};
+export const updateSameTimeAppointments = async (date, time, doctor_id) => {
   try {
     const result = await pool.query(
       `UPDATE appointments 
@@ -86,7 +115,7 @@ export const updateSameTimeAppointments = async (date,time,doctor_id) => {
          AND status = $4 
          AND doctor_id = $5
        RETURNING *`,
-      ["declined", date, time, "Pending",doctor_id]
+      ["declined", date, time, "Pending", doctor_id]
     );
 
     if (result.rowCount === 0) {
@@ -115,10 +144,10 @@ export const updateSameTimeAppointments = async (date,time,doctor_id) => {
 //     console.log("Updating with:", { date, time });
 
 //     const result = await pool.query(
-//       `UPDATE appointments 
-//        SET status = $1 
-//        WHERE appointment_date = $2 
-//          AND appointment_time = $3 
+//       `UPDATE appointments
+//        SET status = $1
+//        WHERE appointment_date = $2
+//          AND appointment_time = $3
 //          AND status = $4
 //          AND doctor_id = $5
 //        RETURNING *`,
@@ -146,21 +175,23 @@ export const updateSameTimeAppointments = async (date,time,doctor_id) => {
 //     };
 //   }
 // };
-export const getDetails = async ({ doc_id , date })=>{
-  try{
+
+export const getDetails = async (doctor_id, appointment_date) => {
+  try {
     const result = await pool.query(
-      `SELECT * FROM APPOINTMENTS where doctor_id = $1 AND appointment_date = $2`,
-      [doc_id,date]
+      `SELECT * FROM appointments WHERE doctor_id = $1 AND appointment_date = $2 AND status = $3 `,
+      [doctor_id, appointment_date, "approved"]
     );
+
     return {
       success: true,
       data: result.rows,
     };
-  }catch(err){
-    console.log('db error')
-    return{
-      success : false ,
-      message : 'can find or DataBase error' 
-    }
+  } catch (err) {
+    console.error("Database Error:", err);
+    return {
+      success: false,
+      message: "Database error or unable to find details",
+    };
   }
-}
+};

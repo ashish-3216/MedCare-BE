@@ -86,9 +86,11 @@ router.post('/decline',async (req,res)=>{
   
 })
 
-router.get('/details',async (req,res)=>{
+router.post('/details',async (req,res)=>{
   try{
-    const result = await getDetails(req.body) ;
+    const {doc_id , appointment_date} = req.body ;
+    const doctor_id = parseInt(doc_id) ;
+    const result = await getDetails(doctor_id,appointment_date) ;
     if(result.success){
       res.status(200).json(
         {
@@ -103,4 +105,32 @@ router.get('/details',async (req,res)=>{
     return res.status(500).json({message : err.message});
   }
 })
+
+
+// router.post('/details', async (req, res) => {
+//   try {
+//     const { doc_id, appointment_date } = req.body;
+
+//     if (!doc_id || isNaN(Number(doc_id))) {
+//       return res.status(400).json({ message: 'Invalid or missing doctor_id' });
+//     }
+//     if (!appointment_date) {
+//       return res.status(400).json({ message: 'Missing appointment_date' });
+//     }
+
+//     const doctor_id = parseInt(doc_id);
+
+//     const result = await getDetails(doctor_id, appointment_date);
+//     if (result.success) {
+//       return res.status(200).json({ success: true, data: result.data });
+//     } else {
+//       throw new Error('Error in getDetails function');
+//     }
+//   } catch (err) {
+//     console.error('Controller Error:', err.message);
+//     return res.status(500).json({ message: err.message });
+//   }
+// });
+
+
 export default router;
