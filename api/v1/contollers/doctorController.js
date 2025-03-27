@@ -66,7 +66,7 @@ router.post("/add", async (req, res) => {
     }
 });
 
-router.post("/delete", async (req, res) => {
+router.delete("/delete", async (req, res) => {
     try {
         const {id} = req.body; 
       const result = await deleteDoctor(id);

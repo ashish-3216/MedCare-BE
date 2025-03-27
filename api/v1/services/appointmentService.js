@@ -1,5 +1,6 @@
 import express from "express";
 import pool from "../../db/config.js";
+
 export const submitAppointment = async (data) => {
   try {
     const {
@@ -84,7 +85,7 @@ export const declineAppointment = async (id) => {
     const result = await pool.query(
       `UPDATE appointments SET status = $1 
        WHERE id = $2`,
-      ["Pending", id]
+      ["decline", id]
     );
     if (result.rowCount === 0) {
       return {
@@ -189,6 +190,36 @@ export const getDetails = async (doctor_id, appointment_date) => {
     };
   } catch (err) {
     console.error("Database Error:", err);
+    return {
+      success: false,
+      message: "Database error or unable to find details",
+    };
+  }
+};
+
+export const retrieveAppointments = async () => {
+  try {
+    const result = await pool.query(
+      `SELECT a.*, b.username, c.doc_name
+        FROM APPOINTMENTS AS a
+        JOIN users AS b ON b.email_id = a.user_email
+        JOIN doctors AS c ON a.doctor_id = c.id`,
+      []
+    );
+    // const result2 = await pool.query(
+    //   `SELECT a.status FROM APPOINTMENTS AS a
+    //     JOIN users AS b ON b.email_id = a.user_email
+    //     JOIN doctors AS c ON a.doctor_id = c.id`,
+    //   []
+    // );
+
+    // console.log(result2.rows)
+    return {
+      success: true,
+      data: result.rows,
+    };
+  } catch (err) {
+    console.error("Database Error : ", err);
     return {
       success: false,
       message: "Database error or unable to find details",

@@ -105,7 +105,7 @@ export const deleteDoctor = async (data) => {
     ]);
     return {
       success: true,
-      data: result.rows[0],
+      message: "Doctor deleted successfully",
     };
   } catch (err) {
     console.log("error while finding this id");

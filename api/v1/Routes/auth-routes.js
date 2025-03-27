@@ -30,11 +30,12 @@ router.get('/status',(req,res)=>{
   }
 })
 
-router.get("/logout", (req, res) => {
+router.post("/logout", (req, res) => {
   req.logout(()=>{
       req.session.destroy() ;
       res.clearCookie('connect.sid') ;
       res.send('logout successfull');
+      console.log('logout Successfull');
   })
 });
 

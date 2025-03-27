@@ -17,10 +17,12 @@ app.use(
     cookie: { secure: false, httpOnly:true , maxAge: 24 * 60 * 60 * 1000 }, // 24 hours
   })
 );
+
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: ["http://localhost:3000","http://localhost:3002", "http://localhost:3001"],
   credentials: true,
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 

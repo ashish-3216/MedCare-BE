@@ -3,7 +3,8 @@ import {
   approveAppointment,
   updateSameTimeAppointments,
   declineAppointment,
-  getDetails
+  getDetails,
+  retrieveAppointments
 } from "../services/appointmentService.js";
 import express from "express";
 import { authenticateUser } from "../middleware/middleware.js";
@@ -41,7 +42,7 @@ router.post("/",  authenticateUser , async (req, res) => {
 
 router.post("/approve", async (req, res) => {
   try {
-    const { id, appointment_time ,appointment_date,doctor_id} = req.body;
+    const { id, appointment_time ,appointment_date,doctor_id } = req.body;
     const result = await approveAppointment(id);
     if (result.success) {
       const response = await updateSameTimeAppointments(appointment_date,appointment_time,doctor_id);
@@ -106,6 +107,21 @@ router.post('/details',async (req,res)=>{
   }
 })
 
+router.get('/appointments',async (req,res)=>{
+  try{
+    const result = await  retrieveAppointments() ;
+    if(result.success){
+      res.status(200).json(
+        {
+          success : true ,
+          data : result.data,
+        }
+      )
+    }else throw new Error('error in get api'); 
+  }catch(err){
+    return res.status(500).json({message : err.message});
+  }
+})
 
 // router.post('/details', async (req, res) => {
 //   try {
