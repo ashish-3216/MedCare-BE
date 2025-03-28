@@ -42,10 +42,13 @@ router.post("/",  authenticateUser , async (req, res) => {
 
 router.post("/approve", async (req, res) => {
   try {
+    console.log(req.body);
     const { id, appointment_time ,appointment_date,doctor_id } = req.body;
+    console.log(id, appointment_time ,appointment_date,doctor_id);
     const result = await approveAppointment(id);
     if (result.success) {
       const response = await updateSameTimeAppointments(appointment_date,appointment_time,doctor_id);
+      console.log("222");
       if (response.success) {
         return res.status(200).json({
           success: true,
@@ -53,18 +56,21 @@ router.post("/approve", async (req, res) => {
         });
       } else {
         console.error("Failed to approve appointment:", response.message);
+        console.log("222");
         return res
           .status(400)
           .json({ success: false, message: response.message });
       }
     }else{
       console.error("Failed to approve appointment:", result.message);
+      console.log("222");
         return res
           .status(400)
           .json({ success: false, message: result.message });
     }
   } catch (err) {
     console.error("Error in API controller:", err.message);
+    console.log("555");
     return res
       .status(500)
       .json({ success: false, message: "Internal Server Error" });

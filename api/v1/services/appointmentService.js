@@ -55,31 +55,7 @@ export const submitAppointment = async (data) => {
   }
 };
 
-export const approveAppointment = async (id) => {
-  try {
-    const result = await pool.query(
-      `Update appointments set status = $2 where id = $1`,
-      [id, "approved"]
-    );
-    if (result.rowCount === 0) {
-      return {
-        success: false,
-        message: "Appointment not found or already approved.",
-      };
-    }
-    console.log("Appointment Confirmed");
-    return {
-      success: true,
-      message: "Appointment Confirmed",
-    };
-  } catch (err) {
-    console.error("Database Error:", err);
-    return {
-      success: false,
-      message: "Can't approve appointment right now",
-    };
-  }
-};
+
 export const declineAppointment = async (id) => {
   try {
     const result = await pool.query(
@@ -106,6 +82,7 @@ export const declineAppointment = async (id) => {
     };
   }
 };
+
 export const updateSameTimeAppointments = async (date, time, doctor_id) => {
   try {
     const result = await pool.query(
@@ -120,10 +97,10 @@ export const updateSameTimeAppointments = async (date, time, doctor_id) => {
     );
 
     if (result.rowCount === 0) {
-      console.log("No pending appointments found on the given date.");
+      console.log("No other pending appointments found on the given date and time.");
       return {
-        success: false,
-        message: "No pending appointments found for the given date.",
+        success: true, // ✅ Treat this as success, not failure
+        message: "No other pending appointments to decline.",
       };
     }
 
@@ -140,6 +117,43 @@ export const updateSameTimeAppointments = async (date, time, doctor_id) => {
     };
   }
 };
+
+
+
+// export const updateSameTimeAppointments = async (date, time, doctor_id) => {
+//   try {
+//     const result = await pool.query(
+//       `UPDATE appointments 
+//        SET status = $1 
+//        WHERE appointment_date = $2 
+//          AND appointment_time = $3 
+//          AND status = $4 
+//          AND doctor_id = $5
+//        RETURNING *`,
+//       ["declined", date, time, "Pending", doctor_id]
+//     );
+
+//     if (result.rowCount === 0) {
+//       console.log("No pending appointments found on the given date.");
+//       return {
+//         success: false,
+//         message: "No pending appointments found for the given date.",
+//       };
+//     }
+
+//     console.log(`${result.rowCount} appointment(s) updated to declined.`);
+//     return {
+//       success: true,
+//       message: `${result.rowCount} appointment(s) updated to declined.`,
+//     };
+//   } catch (err) {
+//     console.error("Database Error:", err);
+//     return {
+//       success: false,
+//       message: "Can't update appointments right now.",
+//     };
+//   }
+// };
 // export const updateSameTimeAppointments = async ( date, time , doc_id) => {
 //   try {
 //     console.log("Updating with:", { date, time });
@@ -223,6 +237,31 @@ export const retrieveAppointments = async () => {
     return {
       success: false,
       message: "Database error or unable to find details",
+    };
+  }
+};
+export const approveAppointment = async (id) => {
+  try {
+    const result = await pool.query(
+      `Update appointments set status = $2 where id = $1`,
+      [id, "approved"]
+    );
+    if (result.rowCount === 0) {
+      return {
+        success: false,
+        message: "Appointment not found or already approved.",
+      };
+    }
+    console.log("Appointment Confirmed");
+    return {
+      success: true,
+      message: "Appointment Confirmed",
+    };
+  } catch (err) {
+    console.error("Database Error:", err);
+    return {
+      success: false,
+      message: "Can't approve appointment right now",
     };
   }
 };
