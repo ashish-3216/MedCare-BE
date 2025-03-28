@@ -48,40 +48,44 @@ export default router;
 // });
 
 router.post("/add", async (req, res) => {
-    try {
-      const result = await addDoctor(req.body);
-      if (result.success) {
-        return res
-          .status(200)
-          .json({ success: true, message: "Added Doctor successfully", data: result.data });
-      } else {
-        console.error("Failed to Add Doctor:", result.message);
-        return res.status(400).json({ success: false, message: result.message });
-      }
-    } catch (err) {
-      console.error("Error in API controller:", err.message);
+  try {
+    const result = await addDoctor(req.body);
+    if (result.success) {
       return res
-        .status(500)
-        .json({ success: false, message: "Internal Server Error" });
+        .status(200)
+        .json({
+          success: true,
+          message: "Added Doctor successfully",
+          data: result.data,
+        });
+    } else {
+      console.error("Failed to Add Doctor:", result.message);
+      return res.status(400).json({ success: false, message: result.message });
     }
+  } catch (err) {
+    console.error("Error in API controller:", err.message);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
 });
 
 router.delete("/delete", async (req, res) => {
-    try {
-        const {id} = req.body; 
-      const result = await deleteDoctor(id);
-      if (result.success) {
-        return res
-          .status(200)
-          .json({ success: true, message: "Deleted Doctor successfully" });
-      } else {
-        console.error("Failed to Delete Doctor:", result.message);
-        return res.status(400).json({ success: false, message: result.message });
-      }
-    } catch (err) {
-      console.error("Error in API controller:", err.message);
+  try {
+    const { id } = req.body;
+    const result = await deleteDoctor(id);
+    if (result.success) {
       return res
-        .status(500)
-        .json({ success: false, message: "Internal Server Error" });
+        .status(200)
+        .json({ success: true, message: "Deleted Doctor successfully" });
+    } else {
+      console.error("Failed to Delete Doctor:", result.message);
+      return res.status(400).json({ success: false, message: result.message });
     }
-  });
+  } catch (err) {
+    console.error("Error in API controller:", err.message);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+});
