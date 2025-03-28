@@ -64,12 +64,12 @@ export const addDoctor = async (data) => {
       description,
       doc_location,
       rating,
+      user_img_url
     } = data;
-    
     const result = await pool.query(
       `INSERT INTO DOCTORS 
-      (doc_name, doc_degree, specialization, experience, gender, description, doc_location, rating) 
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+      (doc_name, doc_degree, specialization, experience, gender, description, doc_location, rating , img_url) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8,$9) RETURNING *`,
       [
         doc_name,
         doc_degree,
@@ -79,6 +79,7 @@ export const addDoctor = async (data) => {
         description,
         doc_location,
         rating,
+        user_img_url
       ]
     );
 
