@@ -4,7 +4,8 @@ import {
   updateSameTimeAppointments,
   declineAppointment,
   getDetails,
-  retrieveAppointments
+  retrieveAppointments,
+  retrieveUserAppointments
 } from "../services/appointmentService.js";
 import express from "express";
 import { authenticateUser } from "../middleware/middleware.js";
@@ -115,6 +116,22 @@ router.post('/details',async (req,res)=>{
 router.get('/appointments',async (req,res)=>{
   try{
     const result = await  retrieveAppointments() ;
+    if(result.success){
+      res.status(200).json(
+        {
+          success : true ,
+          data : result.data,
+        }
+      )
+    }else throw new Error('error in get api'); 
+  }catch(err){
+    return res.status(500).json({message : err.message});
+  }
+})
+router.get('/user',async (req,res)=>{
+  try{
+    const userId = req.query.user_email;
+    const result = await retrieveUserAppointments(userId) ;
     if(result.success){
       res.status(200).json(
         {

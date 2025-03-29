@@ -265,4 +265,24 @@ export const approveAppointment = async (id) => {
     };
   }
 };
-
+export const retrieveUserAppointments = async (userId ) => {
+  try {
+    const result = await pool.query(
+      `SELECT a.*, c.doc_name , c.specialization  
+        FROM APPOINTMENTS AS a
+        JOIN doctors AS c ON a.doctor_id = c.id
+        where user_email = $1`,
+      [userId]
+    );
+    return {
+      success: true,
+      data: result.rows,
+    };
+  } catch (err) {
+    console.error("Database Error : ", err);
+    return {
+      success: false,
+      message: "Database error or unable to find details",
+    };
+  }
+};
