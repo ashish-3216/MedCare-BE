@@ -265,3 +265,4 @@ export const approveAppointment = async (id) => {
     };
   }
 };
+
