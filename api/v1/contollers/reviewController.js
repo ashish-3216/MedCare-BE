@@ -2,7 +2,7 @@ import express from 'express'
 import { getReviews,addReview } from "../services/reviewService.js";
 const router = express.Router();
 
-router.get('/', async (req,res)=>{
+router.get('/',async (req,res)=>{
     try{
         const result = await getReviews() ;
         if(!result.success) throw new Error('error in get api') ;

@@ -32,27 +32,6 @@ export const getDoctorById = async (data) => {
   }
 };
 
-// export const addasDoctor = async (data) =>{
-//   try{
-//     const {name,degree,special,exp,desc,loc,rating} = data ;
-//     const result = await pool.query(
-//        `INSERT INTO DOCTORS
-//       (doc_name, doc_degree, specialization, experience, description, doc_location, rating)
-//       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-//       [name, degree, special, exp, desc, loc, rating]
-//     );
-//     return {
-//       success : true ,
-//       data : result.rows[0],
-//     };
-//   }catch(err){
-//     return{
-//       success :false,
-//       message : "invalid details" || err.message,
-//     }
-//   }
-// };
-
 export const addDoctor = async (data) => {
   try {
     const {

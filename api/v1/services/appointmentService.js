@@ -119,78 +119,6 @@ export const updateSameTimeAppointments = async (date, time, doctor_id) => {
 };
 
 
-
-// export const updateSameTimeAppointments = async (date, time, doctor_id) => {
-//   try {
-//     const result = await pool.query(
-//       `UPDATE appointments 
-//        SET status = $1 
-//        WHERE appointment_date = $2 
-//          AND appointment_time = $3 
-//          AND status = $4 
-//          AND doctor_id = $5
-//        RETURNING *`,
-//       ["declined", date, time, "Pending", doctor_id]
-//     );
-
-//     if (result.rowCount === 0) {
-//       console.log("No pending appointments found on the given date.");
-//       return {
-//         success: false,
-//         message: "No pending appointments found for the given date.",
-//       };
-//     }
-
-//     console.log(`${result.rowCount} appointment(s) updated to declined.`);
-//     return {
-//       success: true,
-//       message: `${result.rowCount} appointment(s) updated to declined.`,
-//     };
-//   } catch (err) {
-//     console.error("Database Error:", err);
-//     return {
-//       success: false,
-//       message: "Can't update appointments right now.",
-//     };
-//   }
-// };
-// export const updateSameTimeAppointments = async ( date, time , doc_id) => {
-//   try {
-//     console.log("Updating with:", { date, time });
-
-//     const result = await pool.query(
-//       `UPDATE appointments
-//        SET status = $1
-//        WHERE appointment_date = $2
-//          AND appointment_time = $3
-//          AND status = $4
-//          AND doctor_id = $5
-//        RETURNING *`,
-//       ["declined", date, time, "Pending", doc_id]
-//     );
-//     console.log(`UPDATE appointments SET status = 'declined' WHERE appointment_date = '${date}' AND appointment_time = '${time}' AND status = 'Pending' AND doctor_id = '${doc_id}'`);
-//     if (result.rowCount === 0) {
-//       console.log("No pending appointments found on the given date and time.");
-//       return {
-//         success: false,
-//         message: "No pending appointments found for the given date and time.",
-//       };
-//     }
-
-//     console.log(`${result.rowCount} appointment(s) updated to declined.`);
-//     return {
-//       success: true,
-//       message: `${result.rowCount} appointment(s) updated to declined.`,
-//     };
-//   } catch (err) {
-//     console.error("Database Error:", err);
-//     return {
-//       success: false,
-//       message: "Can't update appointments right now.",
-//     };
-//   }
-// };
-
 export const getDetails = async (doctor_id, appointment_date) => {
   try {
     const result = await pool.query(
@@ -220,14 +148,6 @@ export const retrieveAppointments = async () => {
         JOIN doctors AS c ON a.doctor_id = c.id`,
       []
     );
-    // const result2 = await pool.query(
-    //   `SELECT a.status FROM APPOINTMENTS AS a
-    //     JOIN users AS b ON b.email_id = a.user_email
-    //     JOIN doctors AS c ON a.doctor_id = c.id`,
-    //   []
-    // );
-
-    // console.log(result2.rows)
     return {
       success: true,
       data: result.rows,

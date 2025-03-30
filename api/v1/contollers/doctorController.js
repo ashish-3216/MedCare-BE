@@ -5,7 +5,7 @@ import {
   addDoctor,
   deleteDoctor,
 } from "../services/doctorService.js";
-
+import { authenticateUser } from "../middleware/middleware.js";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
     return res.status(400).send({ message: err.message || "" });
   }
 });
-router.get("/:id", async (req, res) => {
+router.get("/:id",async (req, res) => {
   try {
     const { id } = req.params;
     const response = await getDoctorById(id);
@@ -28,26 +28,8 @@ router.get("/:id", async (req, res) => {
 });
 export default router;
 
-// router.post("/add", async (req, res) => {
-//   try {
-//     const result = await addDoctor(req.body);
-//     if (result.success) {
-//       return res
-//         .status(200)
-//         .json({ success: true, message: "Added Doctor successfully" });
-//     } else {
-//       console.error("Failed to Add Doctor:", result.message);
-//       return res.status(400).json({ success: false, message: result.message });
-//     }
-//   } catch (err) {
-//     console.error("Error in API controller:", err.message);
-//     return res
-//       .status(500)
-//       .json({ success: false, message: "Internal Server Error" });
-//   }
-// });
 
-router.post("/add", async (req, res) => {
+router.post("/add",async (req, res) => {
   try {
     const result = await addDoctor(req.body);
     if (result.success) {
@@ -70,7 +52,7 @@ router.post("/add", async (req, res) => {
   }
 });
 
-router.delete("/delete", async (req, res) => {
+router.delete("/delete",async (req, res) => {
   try {
     const { id } = req.body;
     const result = await deleteDoctor(id);

@@ -31,7 +31,7 @@ export const addReview = async (data) => {
   try {
     const { doctor_id, review , rating , name } = data;
     const result = await pool.query(
-      `INSERT INTO reviews (doc_id, review_text,rating,name) VALUES ($1, $2,$3,$4) RETURNING *`,
+      `INSERT INTO reviews (doc_id, review_text,rating,username) VALUES ($1, $2,$3,$4) RETURNING *`,
       [doctor_id, review,rating,name]
     );
     console.log("Review inserted:", result.rows[0]);
