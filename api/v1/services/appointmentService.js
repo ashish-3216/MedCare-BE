@@ -145,7 +145,7 @@ export const retrieveAppointments = async () => {
       `SELECT a.*, b.username, c.doc_name
         FROM APPOINTMENTS AS a
         JOIN users AS b ON b.email_id = a.user_email
-        JOIN doctors AS c ON a.doctor_id = c.id`,
+        JOIN doctors AS c ON a.doctor_id = c.id ORDER BY appointment_date DESC`,
       []
     );
     return {

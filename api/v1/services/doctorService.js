@@ -1,7 +1,7 @@
 import pool from "../../db/config.js";
 export const getDoctors = async (req, res) => {
   try {
-    const result = await pool.query(`Select * from doctors`, []);
+    const result = await pool.query(`Select * from doctors ORDER BY rating DESC `, []);
     return {
       success: true,
       data: result.rows,

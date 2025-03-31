@@ -40,8 +40,6 @@ router.post("/logout", (req, res) => {
 });
 
 
-
-
 router.get(
   "/google",
   passport.authenticate("google", {
@@ -51,4 +49,6 @@ router.get(
 router.get("/google/callback", passport.authenticate("google"), (req, res) => {
   res.redirect("http://localhost:3000/");
 });
+
+
 export default router;

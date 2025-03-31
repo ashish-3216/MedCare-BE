@@ -78,6 +78,7 @@ passport.use(
     }
   )
 );
+
 passport.serializeUser((user, done) => {
   console.log("Serializing User:", user.email_id);
   done(null, user.email_id);
@@ -100,4 +101,5 @@ passport.deserializeUser(async (email_id, done) => {
     done(error);
   }
 });
+
 export default passport;
