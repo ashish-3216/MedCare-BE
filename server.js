@@ -15,14 +15,19 @@ app.use(
     secret: process.env.cookieKey || "fallbackSecretKey",
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false, httpOnly:true , maxAge: 24 * 60 * 60 * 1000 },
+    cookie: {
+      httpOnly: true,
+      secure: true,             // ✅ Required for HTTPS domains like Render
+      sameSite: "none",         // ✅ Required for cross-origin cookie over HTTPS
+      maxAge: 1000 * 60 * 60 * 24, // Optional: 1 day
+    },
   })
 );
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(cors({
-  origin: ["http://localhost:3000", "http://localhost:3001", "http://localhost:3002" , "http://localhost:3003"],
+  origin: ["http://localhost:3000", "http://localhost:3001", "http://localhost:3002" , "http://localhost:3003",],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
 }));
