@@ -19,7 +19,10 @@ app.use(cors({
   },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: ["Content-Type",
+    "Authorization",
+    "Cache-Control", // Allow Cache-Control header
+    "Pragma" ],
   exposedHeaders: ["set-cookie"]
 }));
 
