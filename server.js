@@ -17,12 +17,13 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: true,             // ✅ Required for HTTPS domains like Render
-      sameSite: "none",         // ✅ Required for cross-origin cookie over HTTPS
-      maxAge: 1000 * 60 * 60 * 24, // Optional: 1 day
+      secure: process.env.NODE_ENV === "production", // Use true only in production
+      sameSite: "None",
+      maxAge: 1000 * 60 * 60 * 24, // 1 day
     },
   })
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
 

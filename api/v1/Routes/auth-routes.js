@@ -14,12 +14,14 @@ router.post("/login", (req, res, next) => {
       return res.status(401).json({ success : false , error: info?.message || "Invalid credentials" });
     }
     req.login(user, (loginErr) => {
+
       req.session.user = {
         id: user.id,
         username: user.username,
         email_id: user.email_id,
         role: user.role
       };
+      
       if (loginErr) {
         return res.status(500).json({ success : false , error: "Login failed" });
       }
@@ -29,8 +31,11 @@ router.post("/login", (req, res, next) => {
 });
 
 router.get("/status", (req, res) => {
-  if (req.session.user) {
-    return res.json({ authenticated: true, user: req.session.user });
+  // console.log("Session:", req.session);
+  // console.log("Authenticated:", req.isAuthenticated());
+  
+  if (req.isAuthenticated()) {
+    return res.json({ authenticated: true, user: req.user });
   } else {
     return res.status(401).json({ authenticated: false });
   }
