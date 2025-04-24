@@ -13,9 +13,14 @@ const app = express();
 
 
 app.use(cors({
-  origin: "*",
+  origin: function(origin, callback) {
+    // Allow any origin
+    callback(null, true);
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  exposedHeaders: ["set-cookie"]
 }));
 
 app.set('trust proxy', 1);
