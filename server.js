@@ -10,6 +10,8 @@ import session from "express-session";
 
 dotenv.config();
 const app = express();
+app.set('trust proxy', 1);
+
 
 app.use(cors({
   origin: ["http://localhost:3000", "http://localhost:3001", "http://localhost:3002" , "http://localhost:3003",],
@@ -25,10 +27,10 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Use true only in production
-      sameSite: "None",
-      maxAge: 1000 * 60 * 60 * 24, // 1 day
-    },
+      secure: false, // Must be false for localhost testing (no HTTPS)
+      sameSite: "lax", // Change from "None" to "lax" for localhost testing
+      maxAge: 1000 * 60 * 60 * 24,
+    },    
   })
 );
 
