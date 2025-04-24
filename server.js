@@ -25,6 +25,7 @@ app.use(cors({
 
 app.set('trust proxy', 1);
 
+// Update your session configuration
 app.use(
   session({
     secret: process.env.cookieKey || "fallbackSecretKey",
@@ -32,10 +33,10 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: false, // Must be false for localhost testing (no HTTPS)
-      sameSite: "lax", // Change from "None" to "lax" for localhost testing
+      secure: false, // Set to true only in production
+      sameSite: 'none', // Important for cross-origin
       maxAge: 1000 * 60 * 60 * 24,
-    },    
+    },
   })
 );
 
