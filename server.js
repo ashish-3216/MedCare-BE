@@ -10,6 +10,14 @@ import session from "express-session";
 
 dotenv.config();
 const app = express();
+
+app.use(cors({
+  origin: ["http://localhost:3000", "http://localhost:3001", "http://localhost:3002" , "http://localhost:3003",],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+}));
+
+
 app.use(
   session({
     secret: process.env.cookieKey || "fallbackSecretKey",
@@ -27,11 +35,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(cors({
-  origin: ["http://localhost:3000", "http://localhost:3001", "http://localhost:3002" , "http://localhost:3003",],
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE"],
-}));
 
 
 app.use(bodyParser.json());
