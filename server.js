@@ -10,15 +10,15 @@ import session from "express-session";
 
 dotenv.config();
 const app = express();
-app.set('trust proxy', 1);
 
 
 app.use(cors({
-  origin: ["http://localhost:3000", "http://localhost:3001", "http://localhost:3002" , "http://localhost:3003",],
+  origin: "*",
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
 }));
 
+app.set('trust proxy', 1);
 
 app.use(
   session({
