@@ -13,7 +13,7 @@ const app = express();
 
 
 app.use(cors({
-  origin: "http://localhost:3000" ,
+  origin: ["http://localhost:3000","http://localhost:3001"] ,
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type",
@@ -23,29 +23,39 @@ app.use(cors({
   exposedHeaders: ["set-cookie"]
 }));
 
-// app.set('trust proxy', 1);
+// Deployed Session Configuration
+app.set('trust proxy', 1); // if behind a proxy like Nginx or Render
 
-// // Update your session configuration
 app.use(
   session({
-    secret: process.env.cookieKey || "fallbackSecretKey",
+    secret: process.env.cookieKey || "yourProductionSecret",
     resave: false,
     saveUninitialized: false,
-    // cookie: {
-    //   httpOnly: true,
-    //   secure: false, // Set to true only in production
-    //   sameSite: 'none', // Important for cross-origin
-    //   maxAge: 1000 * 60 * 60 * 24,
-    // },
     cookie: {
       httpOnly: true,
-      secure: false,     // OK for HTTP on localhost
-      sameSite: 'lax',   // ← Fix here
+      secure: true,         // ✅ Secure cookies only sent over HTTPS
+      sameSite: "none",     // ✅ Required for cross-site cookies
       maxAge: 1000 * 60 * 60 * 24,
     },
-    
   })
 );
+
+// Local your session configuration
+// app.use(
+//   session({
+//     secret: process.env.cookieKey || "fallbackSecretKey",
+//     resave: false,
+//     saveUninitialized: false,
+
+//     cookie: {
+//       httpOnly: true,
+//       secure: false,     // OK for HTTP on localhost
+//       sameSite: 'lax',   // ← Fix here
+//       maxAge: 1000 * 60 * 60 * 24,
+//     },
+    
+//   })
+// );
 
 app.use(passport.initialize());
 app.use(passport.session());
