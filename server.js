@@ -13,10 +13,7 @@ const app = express();
 
 
 app.use(cors({
-  origin: function(origin, callback) {
-    // Allow any origin
-    callback(null, true);
-  },
+  origin: "http://localhost:3000" ,
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type",
@@ -26,20 +23,27 @@ app.use(cors({
   exposedHeaders: ["set-cookie"]
 }));
 
-app.set('trust proxy', 1);
+// app.set('trust proxy', 1);
 
-// Update your session configuration
+// // Update your session configuration
 app.use(
   session({
     secret: process.env.cookieKey || "fallbackSecretKey",
     resave: false,
     saveUninitialized: false,
+    // cookie: {
+    //   httpOnly: true,
+    //   secure: false, // Set to true only in production
+    //   sameSite: 'none', // Important for cross-origin
+    //   maxAge: 1000 * 60 * 60 * 24,
+    // },
     cookie: {
       httpOnly: true,
-      secure: false, // Set to true only in production
-      sameSite: 'none', // Important for cross-origin
+      secure: false,     // OK for HTTP on localhost
+      sameSite: 'lax',   // ← Fix here
       maxAge: 1000 * 60 * 60 * 24,
     },
+    
   })
 );
 
