@@ -13,7 +13,7 @@ const app = express();
 
 
 app.use(cors({
-  origin: ["http://localhost:3000","https://med-care-eta.vercel.app , https://med-care-admin-portal.vercel.app "] ,
+  origin: ["http://localhost:3000","https://med-care-eta.vercel.app" , "https://med-care-admin-portal.vercel.app"] ,
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type",
